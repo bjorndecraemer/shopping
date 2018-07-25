@@ -1,0 +1,29 @@
+<div class="row">
+  <div class="col-12">
+    <img [src]="selectedRecipe.imagePath" alt="" class="img-fluid">
+  </div>
+</div>
+<div class="row">
+  <div class="col-12">
+    <h1>{{selectedRecipe.name}}</h1>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-12">
+      <button class="btn btn-primary dropdown dropdown-toggle" id="theid" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Manage Recipe
+      </button>
+      <div class="dropdown-menu" aria-labelledby="theid">
+        <a class="dropdown-item" href="#">Add to Shopping List</a>
+        <a class="dropdown-item" href="#">Edit Recipe</a>
+        <a class="dropdown-item" href="#">Delete Recipe</a>
+      </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-12">{{selectedRecipe.description}}</div>
+</div>
+<div class="row">
+  <div class="col-12">Ingredients</div>
+</div>
