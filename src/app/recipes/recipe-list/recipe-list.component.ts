@@ -1,5 +1,7 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {Recipe} from "../recipe.model";
+import {RecipeService} from "../recipe.service";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
   selector: 'app-recipe-list',
@@ -8,23 +10,21 @@ import {Recipe} from "../recipe.model";
 })
 export class RecipeListComponent implements OnInit {
 
-  @Output() selectedRecipeChanged = new EventEmitter<Recipe>();
+  recipes : Recipe[] = [];
+  constructor(private recipeService : RecipeService,
+              private router : Router,
+              private route : ActivatedRoute
+              ) {}
 
-  recipes: Recipe[] = [
-    new Recipe('Crackers with stuff on it', 'This is simply a test description','https://c.pxhere.com/photos/fa/d4/eat_vegetables_food_kohl_nutrition_onions_healthy_meatless-424515.jpg!d'),
-    new Recipe('Yummy Salad', 'This salad would make a beautiful presentation at your summertime get-togethers, or on your dinner table. It goes well with grilled options and balances out heavier main dishes. I think it would look cute as an appetizer, served in small glasses or ramekins.','https://c.pxhere.com/photos/27/e2/salad_lenses_avocado_bowl_yam_healthy_food_vitamins-1215185.jpg!d')
-  ];
+    ngOnInit(){
+      this.recipes = this.recipeService.getRecipes();
+    }
 
-  onSelectedRecipeChanged(selRec : Recipe){
-    this.selectedRecipeChanged.emit(selRec);
-  }
+    onNewRecipe(){
+      this.router.navigate(['new'],{relativeTo : this.route});
+    }
 
-  constructor() { }
 
-  ngOnInit() {
-    // if(this.recipes && this.recipes.length > 0){
-    //   this.selectedRecipeChanged.emit(this.recipes[0]);
-    // }
-  }
+
 
 }

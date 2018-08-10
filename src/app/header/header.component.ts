@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Output} from "@angular/core";
+import {Component} from "@angular/core";
 
 @Component({
   moduleId : 'module.id',
@@ -7,16 +7,4 @@ import {Component, EventEmitter, Output} from "@angular/core";
 
 })
 export class HeaderComponent{
-
-  @Output() recipesSelected = new EventEmitter();
-  @Output() shoppingSelected = new EventEmitter();
-
-  onRecipesSelected(){
-    this.recipesSelected.emit();
-  }
-
-  onShoppingSelected(){
-    this.shoppingSelected.emit();
-  }
-
 }
