@@ -1,4 +1,6 @@
 import {Component, OnInit} from "@angular/core";
+import {Subscription} from "rxjs";
+import {DataStorageService} from "../shared/data-storage.service";
 
 
 @Component({
@@ -8,11 +10,20 @@ import {Component, OnInit} from "@angular/core";
 })
 export class RecipesComponent implements OnInit {
 
+  loading = false;
+  private loadingChangedSubscription : Subscription;
 
-  constructor(){}
+  constructor(private dataStorageService : DataStorageService){
+
+  }
 
   ngOnInit() {
-
+    this.loading = !this.dataStorageService.initialRecipesLoaded;
+    this.loadingChangedSubscription = this.dataStorageService.shoppingListDataLoadingChanged.subscribe(
+      (loadingBusy: boolean) => {
+        this.loading = loadingBusy;
+      }
+    )
   }
 
 }
