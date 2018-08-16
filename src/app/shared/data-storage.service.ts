@@ -6,6 +6,7 @@ import {Recipe} from "../recipes/recipe.model";
 import {Ingredient} from "./ingredient.model";
 import {map} from "rxjs/operators";
 import {Subject} from "rxjs";
+import {AuthService} from "../auth/auth.service";
 
 @Injectable()
 export class DataStorageService{
@@ -16,11 +17,13 @@ export class DataStorageService{
   shoppingListDataLoadingChanged = new Subject<boolean>();
   initialShoppingListLoaded = false;
 
-  constructor(private http : HttpClient, private recipeService : RecipeService, private shoppingListService : ShoppingListService){}
+  constructor(private http : HttpClient, private recipeService : RecipeService, private shoppingListService : ShoppingListService, private authService : AuthService){}
 
   loadRecipes(){
+    const token = this.authService.getToken();
+
     this.recipeDataLoadingChanged.next(true);
-    return this.http.get('https://ng-recipe-book-436f3.firebaseio.com/recipes.json')
+    return this.http.get('https://ng-recipe-book-436f3.firebaseio.com/recipes.json?auth='+token)
       .pipe(map(
         (response : Recipe[]) => {
           if(response){
@@ -51,8 +54,9 @@ export class DataStorageService{
   }
 
   loadShoppingList(){
+    const token = this.authService.getToken();
     this.shoppingListDataLoadingChanged.next(true);
-    return this.http.get('https://ng-recipe-book-436f3.firebaseio.com/shoppingList.json')
+    return this.http.get('https://ng-recipe-book-436f3.firebaseio.com/shoppingList.json?auth='+token)
       .subscribe(
         (response : Ingredient[]) => {
           console.log(response);

@@ -1,13 +1,20 @@
-<div class="row" *ngIf="!loading">
-  <div class="col-md-5">
-    <app-recipe-list></app-recipe-list>
+
+  <div class="row" *ngIf="authenticated && !loading">
+    <div class="col-md-5">
+      <app-recipe-list></app-recipe-list>
+    </div>
+    <div class="col-md-7">
+      <router-outlet></router-outlet>
+    </div>
   </div>
-  <div class="col-md-7">
-   <router-outlet></router-outlet>
+  <div class="col-10" *ngIf="authenticated && loading">
+    <div class="alert alert-light" role="alert">
+      Data is loading, please wait...
+    </div>
   </div>
-</div>
-<div class="col-10" *ngIf="loading">
-  <div class="alert alert-light" role="alert">
-    Data is loading, please wait...
+  <div class="col-10" *ngIf="!authenticated">
+    <div class="alert alert-light" role="alert">
+      Please log in first...
+    </div>
   </div>
-</div>
+
