@@ -34,4 +34,8 @@ export class HeaderComponent {
     this.dataStorageService.loadShoppingList();
   }
 
+  onLogout(){
+    this.authService.logout();
+  }
+
 }

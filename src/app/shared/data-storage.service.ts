@@ -50,12 +50,13 @@ export class DataStorageService{
   }
 
   saveRecipes(){
-    return this.http.put('https://ng-recipe-book-436f3.firebaseio.com/recipes.json', this.recipeService.getRecipes(), {headers : this.headers});
+    const token = this.authService.getToken();
+    return this.http.put('https://ng-recipe-book-436f3.firebaseio.com/recipes.json?auth='+token, this.recipeService.getRecipes(), {headers : this.headers});
   }
 
   loadShoppingList(){
-    const token = this.authService.getToken();
     this.shoppingListDataLoadingChanged.next(true);
+    const token = this.authService.getToken();
     return this.http.get('https://ng-recipe-book-436f3.firebaseio.com/shoppingList.json?auth='+token)
       .subscribe(
         (response : Ingredient[]) => {
@@ -72,7 +73,8 @@ export class DataStorageService{
   }
 
   saveShoppingList(){
-    return this.http.put('https://ng-recipe-book-436f3.firebaseio.com/shoppingList.json',this.shoppingListService.getIngredients(), {headers : this.headers})
+    const token = this.authService.getToken();
+    return this.http.put('https://ng-recipe-book-436f3.firebaseio.com/shoppingList.json?auth='+token,this.shoppingListService.getIngredients(), {headers : this.headers})
   }
 
 

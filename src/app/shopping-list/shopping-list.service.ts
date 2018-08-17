@@ -9,10 +9,10 @@ export class ShoppingListService{
   startedEditing = new Subject<number>();
 
 
-  private ingredients : Ingredient[] =[];
-    // new Ingredient('Tomato',5),
-    // new Ingredient('Mozarella',200),
-    // new Ingredient('Salad',125)];
+  private ingredients : Ingredient[] =[
+    new Ingredient('Tomato',5),
+    new Ingredient('Mozarella',200),
+    new Ingredient('Salad',125)];
 
   getIngredients() : Ingredient[]{
     return this.ingredients.slice();

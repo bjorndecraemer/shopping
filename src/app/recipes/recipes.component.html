@@ -1,20 +1,22 @@
-
-  <div class="row" *ngIf="authenticated && !loading">
-    <div class="col-md-5">
-      <app-recipe-list></app-recipe-list>
-    </div>
-    <div class="col-md-7">
-      <router-outlet></router-outlet>
-    </div>
+<div class="row">
+  <div class="col-md-5">
+    <app-recipe-list></app-recipe-list>
   </div>
-  <div class="col-10" *ngIf="authenticated && loading">
-    <div class="alert alert-light" role="alert">
-      Data is loading, please wait...
-    </div>
+  <div class="col-md-7">
+    <router-outlet></router-outlet>
   </div>
-  <div class="col-10" *ngIf="!authenticated">
-    <div class="alert alert-light" role="alert">
-      Please log in first...
-    </div>
-  </div>
-
+</div>
+<!--<div class="row" *ngIf="authenticated && loading">-->
+  <!--<div class="col-10">-->
+    <!--<div class="alert alert-info" role="alert">-->
+      <!--Data is loading, please wait...-->
+    <!--</div>-->
+  <!--</div>-->
+<!--</div>-->
+<!--<div class="row" *ngIf="!authenticated">-->
+  <!--<div class="col-10">-->
+    <!--<div class="alert alert-info" role="alert">-->
+      <!--Please sign in first...-->
+    <!--</div>-->
+  <!--</div>-->
+<!--</div>-->

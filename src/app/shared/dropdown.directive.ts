@@ -59,6 +59,8 @@ export class DropdownDirective implements AfterViewInit, OnDestroy{
     }).subscribe(()=> {});
   }
   ngOnDestroy(){
-    this.openSubscription.unsubscribe();
+    if(this.openSubscription){
+      this.openSubscription.unsubscribe();
+    }
   }
 }
