@@ -1,9 +1,9 @@
 import {Component} from "@angular/core";
-import {DataStorageService} from "../shared/data-storage.service";
+import {DataStorageService} from "../../shared/data-storage.service";
 import {HttpResponse} from "@angular/common/http";
-import {Recipe} from "../recipes/recipe.model";
-import {Ingredient} from "../shared/ingredient.model";
-import {AuthService} from "../auth/auth.service";
+import {Recipe} from "../../recipes/recipe.model";
+import {Ingredient} from "../../shared/ingredient.model";
+import {AuthService} from "../../auth/auth.service";
 
 @Component({
   moduleId: 'module.id',

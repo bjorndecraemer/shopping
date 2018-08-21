@@ -6,7 +6,6 @@ import {Recipe} from "../recipes/recipe.model";
 import {Ingredient} from "./ingredient.model";
 import {map} from "rxjs/operators";
 import {Subject} from "rxjs";
-import {AuthService} from "../auth/auth.service";
 
 @Injectable()
 export class DataStorageService{
@@ -17,15 +16,13 @@ export class DataStorageService{
   shoppingListDataLoadingChanged = new Subject<boolean>();
   initialShoppingListLoaded = false;
 
-  constructor(private http : HttpClient, private recipeService : RecipeService, private shoppingListService : ShoppingListService, private authService : AuthService){}
+  constructor(private http : HttpClient, private recipeService : RecipeService, private shoppingListService : ShoppingListService){}
 
   loadRecipes(){
-    const token = this.authService.getToken();
-
     this.recipeDataLoadingChanged.next(true);
-    return this.http.get('https://ng-recipe-book-436f3.firebaseio.com/recipes.json?auth='+token)
+    return this.http.get<Recipe[]>('https://ng-recipe-book-436f3.firebaseio.com/recipes.json')
       .pipe(map(
-        (response : Recipe[]) => {
+        response  => {
           if(response){
             for(let recipe of response){
               if(!recipe['ingredients']){
@@ -50,16 +47,14 @@ export class DataStorageService{
   }
 
   saveRecipes(){
-    const token = this.authService.getToken();
-    return this.http.put('https://ng-recipe-book-436f3.firebaseio.com/recipes.json?auth='+token, this.recipeService.getRecipes(), {headers : this.headers});
+    return this.http.put('https://ng-recipe-book-436f3.firebaseio.com/recipes.json', this.recipeService.getRecipes(), {headers : this.headers});
   }
 
   loadShoppingList(){
     this.shoppingListDataLoadingChanged.next(true);
-    const token = this.authService.getToken();
-    return this.http.get('https://ng-recipe-book-436f3.firebaseio.com/shoppingList.json?auth='+token)
+    return this.http.get<Ingredient[]>('https://ng-recipe-book-436f3.firebaseio.com/shoppingList.json')
       .subscribe(
-        (response : Ingredient[]) => {
+        response => {
           console.log(response);
           this.shoppingListService.setIngredients(response);
           this.shoppingListDataLoadingChanged.next(false);
@@ -73,8 +68,7 @@ export class DataStorageService{
   }
 
   saveShoppingList(){
-    const token = this.authService.getToken();
-    return this.http.put('https://ng-recipe-book-436f3.firebaseio.com/shoppingList.json?auth='+token,this.shoppingListService.getIngredients(), {headers : this.headers})
+    return this.http.put('https://ng-recipe-book-436f3.firebaseio.com/shoppingList.json',this.shoppingListService.getIngredients(), {headers : this.headers})
   }
 
 
