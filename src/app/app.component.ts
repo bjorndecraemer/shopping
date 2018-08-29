@@ -18,12 +18,7 @@ export class AppComponent implements OnInit, OnDestroy{
   ngOnInit(){
 
     firebase.initializeApp({
-      apiKey: "AIzaSyBXhHePBFDIWUTYKvaca2x2PbTrL94u-cY",
-      authDomain: "ng-recipe-book-436f3.firebaseapp.com",
-      databaseURL: "https://ng-recipe-book-436f3.firebaseio.com",
-      projectId: "ng-recipe-book-436f3",
-      storageBucket: "ng-recipe-book-436f3.appspot.com",
-      messagingSenderId: "264100051171"
+      
     }) ;
 
     this.authenticationChangedSubscription = this.authService.authenticationChanged.subscribe((authenticated : boolean) => {
