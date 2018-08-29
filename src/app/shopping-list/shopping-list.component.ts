@@ -1,9 +1,13 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Ingredient} from "../shared/ingredient.model";
 import {ShoppingListService} from "./shopping-list.service";
-import {Subscription} from "rxjs";
+import {Observable, Subscription} from "rxjs";
 import {DataStorageService} from "../shared/data-storage.service";
 import {AuthService} from "../auth/auth.service";
+import {Store} from "@ngrx/store";
+import * as ShoppingListActions from './store/shopping-list.actions';
+import * as fromApp from '../store/app.reducers';
+import * as fromAuth from '../auth/store/auth.reducers';
 
 @Component({
   selector: 'app-shopping-list',
@@ -12,44 +16,33 @@ import {AuthService} from "../auth/auth.service";
 })
 export class ShoppingListComponent implements OnInit, OnDestroy {
 
-  ingredients : Ingredient[] = [];
+  shoppingListState : Observable<{ingredients: Ingredient[]}>;
+  authState : Observable<fromAuth.State> ;
+
   loading = false;
   authenticated = false;
-  private ingredientsChangedSubscription : Subscription;
   private loadingChangedSubscription : Subscription;
-  private authChangedSubscription : Subscription;
 
 
-  constructor(private shoppingListService: ShoppingListService, private dataStorageService : DataStorageService, private authService : AuthService) {}
+  constructor(private shoppingListService: ShoppingListService, private store : Store<fromApp.AppState>, private dataStorageService : DataStorageService, private authService : AuthService) {}
 
   ngOnInit() {
     this.loading = !this.dataStorageService.initialShoppingListLoaded;
-    this.authenticated = this.authService.isAuthenticated();
-    console.log("authenticated : "+this.authenticated);
-    this.ingredients = this.shoppingListService.getIngredients();
-    this.ingredientsChangedSubscription = this.shoppingListService.ingredientsChanged.subscribe(
-      (ingredients: Ingredient[])=> {
-        this.ingredients = ingredients;
-      }
+    this.authState = this.store.select('auth');
 
-    );
+    this.shoppingListState = this.store.select('shoppingList');
     this.loadingChangedSubscription = this.dataStorageService.shoppingListDataLoadingChanged.subscribe(
       (loadingBusy: boolean) => {
         this.loading = loadingBusy;
       }
     )
-    this.authChangedSubscription = this.authService.authenticationChanged.subscribe((authenticatedValue : boolean) => {
-      this.authenticated = authenticatedValue;
-    })
   }
 
   ngOnDestroy(){
-    this.ingredientsChangedSubscription.unsubscribe();
     this.loadingChangedSubscription.unsubscribe();
-    this.authChangedSubscription.unsubscribe();
   }
 
   onEditItem(itemIndexNr : number){
-    this.shoppingListService.startedEditing.next(itemIndexNr);
+    this.store.dispatch(new ShoppingListActions.StartEdit(itemIndexNr));
   }
 }

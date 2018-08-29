@@ -1,10 +1,7 @@
 import {Recipe} from "./recipe.model";
-import {ShoppingListService} from "../shopping-list/shopping-list.service";
-import {Injectable} from "@angular/core";
 import {Subject} from "rxjs";
 import {Ingredient} from "../shared/ingredient.model";
 
-@Injectable()
 export class RecipeService {
 recipesChanged = new Subject<Recipe[]>();
 
@@ -28,18 +25,12 @@ recipesChanged = new Subject<Recipe[]>();
       ])
   ];
 
-  constructor(private shoppingListService: ShoppingListService){}
-
   getRecipes(){
     return this.recipes.slice();
   }
   setRecipes(newRecipes : Recipe[]){
     this.recipes = newRecipes;
     this.recipesChanged.next(this.recipes.slice());
-  }
-
-  addRecipeIngredientsToShoppingList(recipe: Recipe){
-    this.shoppingListService.addIngredients(recipe.ingredients);
   }
 
   getRecipe(index: number) {
