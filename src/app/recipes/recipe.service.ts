@@ -1,54 +1,57 @@
-import {Recipe} from "./recipe.model";
+
+
+import { Recipe } from './recipe.model';
+import { Ingredient } from '../shared/ingredient.model';
 import {Subject} from "rxjs";
-import {Ingredient} from "../shared/ingredient.model";
 
 export class RecipeService {
-recipesChanged = new Subject<Recipe[]>();
+  recipesChanged = new Subject<Recipe[]>();
 
-  private recipes: Recipe[]
-  = [
+  private recipes: Recipe[] = [
     new Recipe(
-      'Crackers with stuff on it',
-      'This is simply a test description',
-      'https://c.pxhere.com/photos/fa/d4/eat_vegetables_food_kohl_nutrition_onions_healthy_meatless-424515.jpg!d',
-      [new Ingredient('Cracker',2),
-        new Ingredient('Cherry-tomato',5),
-        new Ingredient('Cracker',2)]),
-    new Recipe(
-      'Yummy Salad',
-      'This salad would make a beautiful presentation at your summertime get-togethers, or on your dinner table. It goes well with grilled options and balances out heavier main dishes. I think it would look cute as an appetizer, served in small glasses or ramekins.',
-      'https://c.pxhere.com/photos/27/e2/salad_lenses_avocado_bowl_yam_healthy_food_vitamins-1215185.jpg!d',
-      [new Ingredient('Lentils',250),
-        new Ingredient('Avocado',0.5),
-        new Ingredient('Carrot',2),
-        new Ingredient('Parmezan',125)
+      'Tasty Schnitzel',
+      'A super-tasty Schnitzel - just awesome!',
+      'https://upload.wikimedia.org/wikipedia/commons/7/72/Schnitzel.JPG',
+      [
+        new Ingredient('Meat', 1),
+        new Ingredient('French Fries', 20)
+      ]),
+    new Recipe('Big Fat Burger',
+      'What else you need to say?',
+      'https://upload.wikimedia.org/wikipedia/commons/b/be/Burger_King_Angus_Bacon_%26_Cheese_Steak_Burger.jpg',
+      [
+        new Ingredient('Buns', 2),
+        new Ingredient('Meat', 1)
       ])
   ];
 
-  getRecipes(){
-    return this.recipes.slice();
-  }
-  setRecipes(newRecipes : Recipe[]){
-    this.recipes = newRecipes;
+  constructor() {}
+
+  setRecipes(recipes: Recipe[]) {
+    this.recipes = recipes;
     this.recipesChanged.next(this.recipes.slice());
+  }
+
+  getRecipes() {
+    return this.recipes.slice();
   }
 
   getRecipe(index: number) {
     return this.recipes[index];
   }
 
-  addRecipe(recipe : Recipe){
+  addRecipe(recipe: Recipe) {
     this.recipes.push(recipe);
     this.recipesChanged.next(this.recipes.slice());
   }
 
-  updateRecipe(index : number, newRecipe : Recipe){
+  updateRecipe(index: number, newRecipe: Recipe) {
     this.recipes[index] = newRecipe;
     this.recipesChanged.next(this.recipes.slice());
   }
 
-  deleteRecipe(index : number){
-    this.recipes.splice(index,1);
+  deleteRecipe(index: number) {
+    this.recipes.splice(index, 1);
     this.recipesChanged.next(this.recipes.slice());
   }
 }

@@ -1,75 +1,42 @@
-import {Injectable} from "@angular/core";
-import {HttpClient, HttpHeaders, HttpResponse} from "@angular/common/http";
-import {RecipeService} from "../recipes/recipe.service";
-import {ShoppingListService} from "../shopping-list/shopping-list.service";
-import {Recipe} from "../recipes/recipe.model";
-import {Ingredient} from "./ingredient.model";
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpRequest } from '@angular/common/http';
+
+import { RecipeService } from '../recipes/recipe.service';
+import { Recipe } from '../recipes/recipe.model';
 import {map} from "rxjs/operators";
-import {Subject} from "rxjs";
 
 @Injectable()
-export class DataStorageService{
+export class DataStorageService {
+  constructor(private httpClient: HttpClient,
+              private recipeService: RecipeService) {
+  }
 
-  private headers = new HttpHeaders({'Content-Type' : 'application/json'});
-  recipeDataLoadingChanged = new Subject<boolean>();
-  initialRecipesLoaded = false;
-  shoppingListDataLoadingChanged = new Subject<boolean>();
-  initialShoppingListLoaded = false;
+  storeRecipes() {
+    const req = new HttpRequest('PUT', 'https://ng-recipe-book-436f3.firebaseio.com/recipes.json', this.recipeService.getRecipes(), {reportProgress: true});
+    return this.httpClient.request(req);
+  }
 
-  constructor(private http : HttpClient, private recipeService : RecipeService, private shoppingListService : ShoppingListService){}
-
-  loadRecipes(){
-    this.recipeDataLoadingChanged.next(true);
-    return this.http.get<Recipe[]>('https://ng-recipe-book-436f3.firebaseio.com/recipes.json')
-      .pipe(map(
-        response  => {
-          if(response){
-            for(let recipe of response){
-              if(!recipe['ingredients']){
-                recipe['ingredients'] = [];
-              }
+  getRecipes() {
+    // this.httpClient.get<Recipe[]>('https://ng-recipe-book-3adbb.firebaseio.com/recipes.json?auth=' + token)
+    this.httpClient.get<Recipe[]>('https://ng-recipe-book-436f3.firebaseio.com/recipes.json', {
+      observe: 'body',
+      responseType: 'json'
+    }).pipe(
+      map(
+        (recipes) => {
+          console.log(recipes);
+          for (let recipe of recipes) {
+            if (!recipe['ingredients']) {
+              recipe['ingredients'] = [];
             }
           }
-      return response;
-    }))
-      .subscribe(
-        (response : Recipe[])=>{
-          console.log(response);
-          this.recipeService.setRecipes(response);
-          this.recipeDataLoadingChanged.next(false);
-          this.initialRecipesLoaded = true;
-        },
-        (error : HttpResponse<any>) => {
-          console.log(error)
-          this.recipeDataLoadingChanged.next(false);
+          return recipes;
         }
-      )
-  }
-
-  saveRecipes(){
-    return this.http.put('https://ng-recipe-book-436f3.firebaseio.com/recipes.json', this.recipeService.getRecipes(), {headers : this.headers});
-  }
-
-  loadShoppingList(){
-    this.shoppingListDataLoadingChanged.next(true);
-    return this.http.get<Ingredient[]>('https://ng-recipe-book-436f3.firebaseio.com/shoppingList.json')
+      ))
       .subscribe(
-        response => {
-          console.log(response);
-          this.shoppingListService.setIngredients(response);
-          this.shoppingListDataLoadingChanged.next(false);
-          this.initialShoppingListLoaded = true;
-        },
-      (error : HttpResponse<any>) => {
-        console.log(error)
-        this.shoppingListDataLoadingChanged.next(false);
-      }
+        (recipes: Recipe[]) => {
+          this.recipeService.setRecipes(recipes);
+        }
       );
   }
-
-  saveShoppingList(){
-    return this.http.put('https://ng-recipe-book-436f3.firebaseio.com/shoppingList.json',this.shoppingListService.getIngredients(), {headers : this.headers})
-  }
-
-
 }
